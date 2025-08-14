@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+{% load static %}
+<head>
+    <title>URL Shortener</title>
+</head>
+<body>
+    <h1>URL Shortener</h1>
+    {% for message in messages %}
+    <div class="alert alert-primary alert-dismissible text-center" id="success"
+        role="alert"
+        style="border-radius: 0;">
+        {{message}}
+        <button type="button" class="btn-close text-dark " data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    {% endfor %}
+    <form id="url_form" method="POST">
+        {% csrf_token %}
+        <div class="col-lg-8 mb-2">
+            <label class="form-label required">Original URL</label>
+            <input type="text" name="original_url" class="form-control" id="original_url"  placeholder="Please enter the original URL">
+        </div>
+        <button type="submit">Shorten</button>
+    </form>
+
+    {% if short_url %}
+        <p>Your shortened URL: <a href="{{ short_url }}">{{ short_url }}</a></p>
+    {% endif %}
+</body>
+<!-- jQuery (must be included before the validation plugin) -->
+<!-- 1. jQuery first -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<!-- 2. jQuery Validation plugin -->
+<script src="https://cdn.jsdelivr.net/jquery.validation/1.19.5/jquery.validate.min.js"></script>
+
+<script src="{% static 'assets/validate.js' %}"></script>
+<script>
+    $("#url_form").validate({
+    rules: {
+        original_url: {
+            required: true,
+            url: true: true,
+        },
+    },
+    messages: {
+        original_url: {
+            required: "Please enter the original url",
+            url: "Please enter a valid url",
+        },
+    },
+    errorElement: "label",
+    errorPlacement: function(error, element){
+        error.addClass("error");
+        error.insertAfter(element);
+    },
+    submitHandler: function (form) {
+        form.submit();
+    }
+});
+</script>
+
+</html>
